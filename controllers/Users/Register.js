@@ -89,7 +89,13 @@ const post = (data) => {
 
 										logins.create(data).then(logindata => {
 											if (logindata) {
-
+												var fs = require('fs');
+												var path = "images";
+												var dir = path.concat('/user_' + logindata.id);
+												if (!fs.existsSync(dir)) {
+													fs.mkdirSync(dir);
+												}
+									
 												defer.resolve(logindata)
 											}
 										}).catch(error => {

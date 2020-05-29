@@ -5,12 +5,12 @@ var fs = require('fs');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    var path = "files";
-    var dir = path.concat('/partner_' + req.params.login_id);
+    var path = "images";
+    var dir = path.concat('/user_' + req.params.login_id);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
     }
-    cb(null, 'files/partner_' + req.params.login_id)
+    cb(null, 'images/user_' + req.params.login_id)
   },
   filename: function (req, file, cb) {
     // var datetime = new Date();

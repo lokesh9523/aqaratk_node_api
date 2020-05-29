@@ -1,32 +1,36 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('logins', {
+  return sequelize.define('property', {
     id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    email: {
-      type: DataTypes.STRING(100),
-      allowNull: false
-    },
-    mobile_number: {
+    login_id: {
       type: DataTypes.BIGINT,
       allowNull: false
     },
-    name: {
-      type: DataTypes.STRING(100),
+    location_id: {
+      type: DataTypes.BIGINT,
       allowNull: false
     },
-    user_name: {
+    property_id: {
+      type: DataTypes.BIGINT,
+      allowNull: false
+    },
+    no_of_bed_rooms: {
+      type: DataTypes.INTEGER(10),
+      allowNull: true
+    },
+    furniture: {
+      type: DataTypes.ENUM('Semi Furnished','Fully Furnished'),
+      allowNull: false
+    },
+    price: {
       type: DataTypes.STRING(45),
-      allowNull: false
-    },
-    password: {
-      type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: true
     },
     date_created: {
       type: DataTypes.DATE,
@@ -36,12 +40,14 @@ module.exports = function(sequelize, DataTypes) {
     date_updated: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+    images: {
+      type: DataTypes.JSON,
+      allowNull: true
     }
   }, {
-    tableName: 'logins',
+    tableName: 'property',
     createdAt: false,
     updatedAt: false
-
   });
 };
-

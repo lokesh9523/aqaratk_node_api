@@ -1,32 +1,25 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('logins', {
+  return sequelize.define('location', {
     id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
-    },
-    email: {
-      type: DataTypes.STRING(100),
-      allowNull: false
-    },
-    mobile_number: {
-      type: DataTypes.BIGINT,
-      allowNull: false
     },
     name: {
       type: DataTypes.STRING(100),
       allowNull: false
     },
-    user_name: {
-      type: DataTypes.STRING(45),
-      allowNull: false
-    },
-    password: {
+    display_name: {
       type: DataTypes.STRING(100),
       allowNull: false
+    },
+    status: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      defaultValue: '1'
     },
     date_created: {
       type: DataTypes.DATE,
@@ -38,10 +31,8 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'logins',
+    tableName: 'location',
     createdAt: false,
     updatedAt: false
-
   });
 };
-

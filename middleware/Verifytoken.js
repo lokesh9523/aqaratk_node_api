@@ -7,7 +7,7 @@ let Token = (req,res,next)=>{
 	if (!token){
 		return next(new Error("This Api Requires token"));
     }
-    let tokendata =  jwt.verify(req.headers['authorization'].toString(), 'mailjanitar')
+    let tokendata =  jwt.verify(req.headers['authorization'].toString(), 'aqaratk')
     if(tokendata){
         req.tokendata = tokendata;
         // console.log(tokendata);
