@@ -132,7 +132,7 @@ const postImage = (req, imagedata) => {
 const search = (req) => {
     let defer = q.defer();
     let data = req.body;
-    var query = ' ';
+    var query = '';
     if (data.location_id) {
         if (query) {
             query = query + "and "
@@ -159,7 +159,7 @@ const search = (req) => {
     }
  
   
-    sequelize.query("select p.*,l.display_name as location_name,pt.display_name as property_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id  " + query + "  order by p.id desc ", {
+    sequelize.query("select p.*,l.display_name as location_name,pt.display_name as property_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id where  " + query + "  order by p.id desc ", {
         replacements: {
             location_id: data.location_id ? data.location_id : 'NULL',
             property_id: data.property_id ? data.property_id : 'NULL',
