@@ -116,18 +116,24 @@ const postImage = (req, imagedata) => {
                         send: true,
                         preview: false,
                     });
+                    if(typeof searchdata[0].images === 'string'){
+                        searchdata[0].images = JSON.parse(searchdata[0].images); 
+                        if(typeof searchdata[0].images === 'string'){
+                            searchdata[0].images = JSON.parse(searchdata[0].images);
+                        }
+                    }
                     email.send({
                         template: 'property',
                         message: {
                             to: 'lokeshbabu.gp95@gmail.com',
                         },
                         locals: {
-                            name: 'Elon',
-                            location:searchdata.location_name,
-                            Property:searchdata.property_name,
-                            bedbrooms:searchdata.no_of_bed_rooms,
-                            furniture:searchdata.furniture,
-                            url: 'http://15.206.186.93:3001/'+searchdata.images['0']
+                            // name: 'Elon',
+                            location:searchdata[0].location_name,
+                            Property:searchdata[0].property_name,
+                            bedbrooms:searchdata[0].no_of_bed_rooms,
+                            furniture:searchdata[0].furniture,
+                            url: 'http://15.206.186.93:3001/'+searchdata[0].images['0']
                         }
                     }).then(() => console.log('email has been sent!')).catch(error => {
                         console.log(error)
