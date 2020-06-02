@@ -56,10 +56,10 @@ const post = (req) => {
     }
     property.create(data).then(propertydata => {
         if (propertydata) {
-           // var path = "image";
-           // var dir = path.concat('/cattle_' + propertydata.id);
-           // if (!fs.existsSync(dir)) {
-             //   fs.mkdirSync(dir);
+            // var path = "image";
+            // var dir = path.concat('/cattle_' + propertydata.id);
+            // if (!fs.existsSync(dir)) {
+            //   fs.mkdirSync(dir);
             //}
             defer.resolve(propertydata)
         }
@@ -78,22 +78,6 @@ const postImage = (req, imagedata) => {
     let defer = q.defer();
     let images = {};
     let data = req.params;
-    console.log(imagedata);
-    // if (imagedata.image_0) {
-    //     images['0'] = imagedata.image_0['0'].path;
-    // }
-    // if (imagedata.image_1) {
-    //     images['1'] = imagedata.image_1['0'].path;
-    // }
-    // if (imagedata.image_2) {
-    //     images['2'] = imagedata.image_1['0'].path;
-    // }
-    // if (imagedata.image_3) {
-    //     images['3'] = imagedata.image_1['0'].path;
-    // }
-    // if (imagedata.image_4) {
-    //     images['4'] = imagedata.image_1['0'].path;
-    // }
     imagedata.forEach((element, index) => {
         images[index] = element.path;
     });
@@ -110,7 +94,47 @@ const postImage = (req, imagedata) => {
             },
         })
             .then(propertyData => {
-                defer.resolve(propertyData);
+                sequelize.query("select p.*,l.display_name as location_name,pt.display_name as property_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id where  p.id=:id", {
+                    replacements: {
+                        id: data.property_id ? data.property_id : 'NULL'
+                    },
+                    type: sequelize.QueryTypes.SELECT
+                }).then(searchdata => {
+                    const nodemailer = require('nodemailer');
+                    const Email = require('email-templates');
+                    const transporter = nodemailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 465,
+                        secure: true,
+                        auth: {
+                            user: "lokeshbabu.gp21@gmail.com",
+                            pass: "9963049529@"
+                        }
+                    });
+                    const email = new Email({
+                        transport: transporter,
+                        send: true,
+                        preview: false,
+                    });
+                    email.send({
+                        template: 'property',
+                        message: {
+                            to: 'lokeshbabu.gp95@gmail.com',
+                        },
+                        locals: {
+                            name: 'Elon',
+                            location:searchdata.location_name,
+                            Property:searchdata.property_name,
+                            bedbrooms:searchdata.no_of_bed_rooms,
+                            furniture:searchdata.furniture,
+                            url: 'http://15.206.186.93:3001/'+searchdata.images['0']
+                        }
+                    }).then(() => console.log('email has been sent!')).catch(error => {
+                        console.log(error)
+                    });
+                    defer.resolve(searchdata);
+
+                });
             })
             .catch(error => {
                 defer.reject({
@@ -157,8 +181,8 @@ const search = (req) => {
         }
         query = query + " c.furniture = :furniture "
     }
- 
-  
+
+
     sequelize.query("select p.*,l.display_name as location_name,pt.display_name as property_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id where  " + query + "  order by p.id desc ", {
         replacements: {
             location_id: data.location_id ? data.location_id : 'NULL',
@@ -178,13 +202,90 @@ const search = (req) => {
     })
     return defer.promise;
 }
-const Property = {
-        get,
-        post,
-        postImage,
-        search
-    };
+const sendMail = (req) => {
+    let defer = q.defer();
+    let images = {};
+    let data = req.params;
+    const nodemailer = require('nodemailer');
+    const Email = require('email-templates');
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: "lokeshbabu.gp21@gmail.com",
+            pass: "9963049529@"// mailtrap.io password
+        }
+    });
+    const email = new Email({
+        transport: transporter,
+        send: true,
+        preview: false,
+    });
+    email.send({
+        template: 'property',
+        message: {
+            to: 'lokeshbabu.gp95@gmail.com',
+        },
+        locals: {
+            name: 'Elon',
+            url: 'http://localhost:3001/images/user_1/Screenshot from 2020-03-21 15-49-34.png'
+        }
+    }).then(() => console.log('email has been sent!')).catch(error => {
+        console.log(error)
+    });
+    // imagedata.forEach((element, index) => {
+    //     images[index] = element.path;
+    // });
+    // property.update({
+    //     images
+    // }, {
+    //     where: {
+    //         id: data.property_id
+    //     }
+    // }).then(imageResponse => {
+    //     property.findOne({
+    //         where: {
+    //             id: data.property_id
+    //         },
+    //     })
+    //         .then(propertyData => {
+    //             sequelize.query("select p.*,l.display_name as location_name,pt.display_name as property_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id where  p.id=:id" , {
+    //                 replacements: {
+    //                     id:data.property_id ? data.property_id : 'NULL'
+    //                 },
+    //                 type: sequelize.QueryTypes.SELECT
+    //             }).then(searchdata => {
+    //                 const nodemailer = require('nodemailer');
+    //                 const Email = require('email-templates');
+    //                 defer.resolve(searchdata);
 
-    export {
-        Property
-    };
+    //             });
+    //         })
+    //         .catch(error => {
+    //             defer.reject({
+    //                 status: 400,
+    //                 message: error.message
+    //             });
+    //             return defer.promise;
+    //         });
+
+    // }).catch(error => {
+    //     defer.reject({
+    //         status: 400,
+    //         message: error.message
+    //     });
+    //     return defer.promise;
+    // });
+    return defer.promise;
+}
+const Property = {
+    get,
+    post,
+    postImage,
+    search, sendMail
+};
+
+export {
+    Property
+};

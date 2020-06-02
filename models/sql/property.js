@@ -44,6 +44,10 @@ module.exports = function(sequelize, DataTypes) {
     images: {
       type: DataTypes.JSON,
       allowNull: true
+    },
+    email_sent: {
+      type: DataTypes.INTEGER(10),
+      allowNull: true
     }
   }, {
     tableName: 'property',
