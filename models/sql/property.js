@@ -48,6 +48,10 @@ module.exports = function(sequelize, DataTypes) {
     email_sent: {
       type: DataTypes.INTEGER(10),
       allowNull: true
+    },
+    municipality_id: {
+      type: DataTypes.BIGINT,
+      allowNull: false
     }
   }, {
     tableName: 'property',

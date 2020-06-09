@@ -51,6 +51,7 @@ app.use(allowCrossDomain);
 let suffix = '';
 app.use(suffix, index);
 app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'images')));
 // //The following code will be used for ejs view
 /*app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'public'));

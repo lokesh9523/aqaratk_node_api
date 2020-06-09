@@ -3,6 +3,7 @@ import path from 'path';
 import IndexRoute from './IndexRoute';
 import LocationRoute from './locationRoute';
 import PropertyRoute from './propertyRoute';
+import MunicipalityRoute  from './municipalityRoute';
 import {
 	Router
 } from 'express';
@@ -15,5 +16,6 @@ module.exports = function (app) {
 	router.use('/', IndexRoute);
 	router.use('/location',LocationRoute);
 	router.use('/property',PropertyRoute);
+	router.use('/municipality',MunicipalityRoute);
 	return router;
 }

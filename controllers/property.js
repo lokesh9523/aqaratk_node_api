@@ -94,7 +94,7 @@ const postImage = (req, imagedata) => {
             },
         })
             .then(propertyData => {
-                sequelize.query("select p.*,l.display_name as location_name,pt.display_name as property_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id where  p.id=:id", {
+                sequelize.query("select p.*,l.display_name as location_name,pt.display_name as property_name,m.display_name as municipality_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id  left join municipalitis m on p.municipality_id = m.id where  p.id=:id", {
                     replacements: {
                         id: data.property_id ? data.property_id : 'NULL'
                     },
@@ -129,6 +129,7 @@ const postImage = (req, imagedata) => {
                         },
                         locals: {
                             // name: 'Elon',
+                            municipality:searchdata[0].municipality_name,
                             location:searchdata[0].location_name,
                             Property:searchdata[0].property_name,
                             bedbrooms:searchdata[0].no_of_bed_rooms,
