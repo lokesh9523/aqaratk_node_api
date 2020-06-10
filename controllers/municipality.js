@@ -33,7 +33,8 @@ const getLocation = (req) => {
     let data = req.params
     location.findAll({
         where:{
-            municipality_id:data.municipality_id
+            municipality_id:data.municipality_id,
+            status:1
         },
         order: [
             ['display_name', 'ASC']
