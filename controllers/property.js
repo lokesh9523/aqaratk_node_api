@@ -170,6 +170,12 @@ const search = (req) => {
         }
         query = query + "p.location_id = :location_id  "
     }
+    if (data.municipality_id) {
+        if (query) {
+            query = query + "and "
+        }
+        query = query + "p.municipality_id = :municipality_id  "
+    }
     if (data.property_id) {
         if (query) {
             query = query + "and"
@@ -186,16 +192,17 @@ const search = (req) => {
         if (query) {
             query = query + "and"
         }
-        query = query + " c.furniture = :furniture "
+        query = query + " p.furniture = :furniture "
     }
 
 
-    sequelize.query("select p.*,l.display_name as location_name,pt.display_name as property_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id where  " + query + "  order by p.id desc ", {
+    sequelize.query("select p.*,m.display_name as municipality_name,l.display_name as location_name,pt.display_name as property_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id left join municipalitis m on p.municipality_id = m.id where  " + query + "  order by p.id desc ", {
         replacements: {
             location_id: data.location_id ? data.location_id : 'NULL',
             property_id: data.property_id ? data.property_id : 'NULL',
             no_of_bed_rooms: data.no_of_bed_rooms ? data.no_of_bed_rooms : 'NULL',
-            furniture: data.furniture ? data.furniture : 'NULL'
+            furniture: data.furniture ? data.furniture : 'NULL',
+            municipality_id:data.municipality_id ? data.municipality_id : 'NULL'
         },
         type: sequelize.QueryTypes.SELECT
     }).then(searchdata => {

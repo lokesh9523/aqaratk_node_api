@@ -71,10 +71,89 @@ const post = (data) => {
         });
     return defer.promise;
 }
+const forgotpassword = (req)=>{
+    let defer = q.defer();
+    const nodemailer = require('nodemailer');
+    let data = req.body;
+    if (!data.email) {
+        defer.reject({
+            status: 403,
+            message: " Email is missing"
+        });
+        return defer.promise;
+    }
+    var otpnumber = Math.floor(1000 + Math.random() * 9000);
 
+    logins.findOne({
+        where: {
+            email: data.email,
+        },
+    })
+        .then(logindata => {
+            if (logindata) {
+                const transporter = nodemailer.createTransport({
+                    host: "smtp.gmail.com",
+                    port: 465,
+                    secure: true,
+                    auth: {
+                        user: "lokeshbabu.gp21@gmail.com",
+                        pass: "9963049529@"// mailtrap.io password
+                    }
+                });
+    
+                var textBody = `FROM: ${data.first_name} EMAIL: ${data.email} MESSAGE: ${data.subject}`;
+                var htmlBody = `<h2>Forgot Password For Your Account In Aqaratk</h2><p>Hii ${logindata.name},</p><p>${otpnumber} is the password for your account Please Login with your new password</p>`;
+                var mail = {
+                    from: "lokeshbabu.gp21@gmail.com", // sender address
+                    to: data.email, // list of receivers (THIS COULD BE A DIFFERENT ADDRESS or ADDRESSES SEPARATED BY COMMAS)
+                    subject: "Forgot Password For Your Account In Aqaratk", // Subject line
+                    text: textBody,
+                    html: htmlBody
+                };
+    
+                // send mail with defined transport object
+                transporter.sendMail(mail, function (err, info) {
+                    if (err) {
+                        console.log(err);
+                        response.json({ message: "message not sent: an error occured; check the server's console log" });
+                    }
+                    else {
+                        var password = md5(otpnumber);
+                        console.log(password)
+                        logins.update({password},{where:{
+                            email:data.email
+                        }
+                    }) .then(logindataa => {
+                        defer.resolve({"data":"Sucess"})
+                    }).catch(error => {
+                        defer.reject({
+                            status: 400,
+                            message: error.message
+                        });
+                        return defer.promise;
+                    });
+                    }
+                });
+            } else {
+                defer.reject({
+                    status: 400,
+                    message: "Email is not registered"
+                });
+                return defer.promise;
+            }
+        }).catch(error => {
+            defer.reject({
+                status: 400,
+                message: error.message
+            });
+            return defer.promise;
+        });
+    return defer.promise;
+}
 const Login = {
     get,
-    post
+    post,
+    forgotpassword
 };
 
 export {

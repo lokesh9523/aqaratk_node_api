@@ -39,5 +39,16 @@ router.post('/login',function(req,res,next){
 		next(err);
 	})
 });
-
+router.post('/forgotpassword',function(req,res,next){
+	loginController.forgotpassword(req).then((response)=>{
+		res.status(200);
+		res.send({
+            data: response
+        });
+	})
+	.catch(err => {
+		console.log(err);
+		next(err);
+	})
+});
 module.exports = router;

@@ -4,6 +4,7 @@ import IndexRoute from './IndexRoute';
 import LocationRoute from './locationRoute';
 import PropertyRoute from './propertyRoute';
 import MunicipalityRoute  from './municipalityRoute';
+import ContactRoute from './contactRoute';
 import {
 	Router
 } from 'express';
@@ -17,5 +18,6 @@ module.exports = function (app) {
 	router.use('/location',LocationRoute);
 	router.use('/property',PropertyRoute);
 	router.use('/municipality',MunicipalityRoute);
+	router.use('/contact',ContactRoute);
 	return router;
 }
