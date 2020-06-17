@@ -13,7 +13,7 @@ const get = () => {
             status: 1
         },
         order: [
-            ['display_name', 'ASC']
+            ['id', 'ASC']
         ],
     })
         .then(locationData => {
