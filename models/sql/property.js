@@ -52,6 +52,14 @@ module.exports = function(sequelize, DataTypes) {
     municipality_id: {
       type: DataTypes.BIGINT,
       allowNull: false
+    },
+     type: {
+      type: DataTypes.ENUM('Sell','Rent'),
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.STRING(500),
+      allowNull: true
     }
   }, {
     tableName: 'property',

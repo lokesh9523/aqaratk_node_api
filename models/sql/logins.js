@@ -36,6 +36,10 @@ module.exports = function(sequelize, DataTypes) {
     date_updated: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+    adjective: {
+      type: DataTypes.STRING(45),
+      allowNull: false
     }
   }, {
     tableName: 'logins',

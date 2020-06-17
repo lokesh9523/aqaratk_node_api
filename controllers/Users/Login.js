@@ -17,7 +17,7 @@ const post = (data) => {
     if (!data.user_name) {
         defer.reject({
             status: 403,
-            message: "Username Or Email is missing"
+            message: "Username is missing"
         });
         return defer.promise;
     }

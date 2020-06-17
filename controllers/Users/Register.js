@@ -31,10 +31,10 @@ const post = (data) => {
 		return defer.promise;
 	}
 
-	if (!data.email) {
+	if (!data.adjective) {
 		defer.reject({
 			status: 403,
-			message: "Email is missing"
+			message: "Adjective is missing"
 		});
 		return defer.promise;
 	}	
