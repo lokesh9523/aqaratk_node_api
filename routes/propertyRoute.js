@@ -72,4 +72,17 @@ router.route('/sendmail').get(function (req, res, next) {
 		next(err);
 	})
 })
+router.route('/:property_id').put(function(req,res,next){
+    propertyController.put(req)
+	.then((response) => {
+        res.status(200);
+		res.send({
+            data: response
+        });
+	})
+	.catch(err => {
+		console.log(err);
+		next(err);
+	})
+})
 module.exports = router;

@@ -74,6 +74,37 @@ const post = (req) => {
     return defer.promise;
 
 }
+const put = (req)=>{
+    let defer = q.defer();
+    let data = req.body;
+   
+    if (!data.property_id) {
+        defer.reject({
+            status: 403,
+            message: "Please Enter the type of property"
+        });
+        return defer.promise;
+    }
+    console.log("iam here",data)
+    property.update(data, {
+        where: {
+            id: data.property_id
+        }
+
+    }).then(propertydata => {
+        if (propertydata) {
+            defer.resolve(propertydata)
+        }
+    }).catch(error => {
+        defer.reject({
+            status: 400,
+            message: error.message
+        });
+        return defer.promise;
+    });
+
+    return defer.promise;
+}
 const postImage = (req, imagedata) => {
     let defer = q.defer();
     let images = {};
@@ -297,7 +328,7 @@ const Property = {
     get,
     post,
     postImage,
-    search, sendMail
+    search, sendMail,put
 };
 
 export {
