@@ -60,6 +60,11 @@ module.exports = function(sequelize, DataTypes) {
     description: {
       type: DataTypes.STRING(500),
       allowNull: true
+    },
+    verified: {
+      type: DataTypes.INTEGER(10),
+      allowNull: false,
+      defaultValue: '0'
     }
   }, {
     tableName: 'property',

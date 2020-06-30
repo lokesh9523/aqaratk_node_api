@@ -2,7 +2,8 @@ import express from 'express';
 
 import {
 	Register as registerController,
-	Login as loginController
+	Login as loginController,
+	Details as detailController
 } from './../controllers';
 
 var router = express.Router();
@@ -51,4 +52,30 @@ router.post('/forgotpassword',function(req,res,next){
 		next(err);
 	})
 });
+router.route('/users').get(function(req,res,next){
+    detailController.getAllUsers(req)
+	.then((response) => {
+        res.status(200);
+		res.send({
+            data: response
+        });
+	})
+	.catch(err => {
+		console.log(err);
+		next(err);
+	})
+})
+router.route('/user/:login_id').get(function(req,res,next){
+    detailController.getPropertyByUser(req.params)
+	.then((response) => {
+        res.status(200);
+		res.send({
+            data: response
+        });
+	})
+	.catch(err => {
+		console.log(err);
+		next(err);
+	})
+})
 module.exports = router;

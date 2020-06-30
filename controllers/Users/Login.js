@@ -159,3 +159,27 @@ const Login = {
 export {
     Login
 };
+
+
+
+
+// CREATE TABLE `aqaratk`.`role` (
+//     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+//     `name` VARCHAR(45) NOT NULL,
+//     `display_name` VARCHAR(45) NOT NULL,
+//     `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     `date_updated` DATETIME NULL DEFAULT NULL,
+//     PRIMARY KEY (`id`));
+// INSERT INTO `aqaratk`.`role` (`name`, `display_name`) VALUES ('user', 'User');
+// INSERT INTO `aqaratk`.`role` (`name`, `display_name`) VALUES ('admin', 'Admin');
+// CREATE TABLE `aqaratk`.`user_role` (
+//     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+//     `login_id` INT(10) NOT NULL,
+//     `role_id` INT(10) NOT NULL,
+//     `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     `date_updated` DATETIME NULL,
+//     PRIMARY KEY (`id`));
+// ALTER TABLE `aqaratk`.`logins` 
+// ADD COLUMN `role` VARCHAR(45) NOT NULL DEFAULT 'user' AFTER `adjective`;
+// ALTER TABLE `aqaratk`.`property` 
+// ADD COLUMN `verified` INT(10) NOT NULL DEFAULT 0 AFTER `description`;
