@@ -11,7 +11,7 @@ const get = () => {
     let defer = q.defer();
     municipalitis.findAll({
         order: [
-            ['id', 'ASC']
+            ['display_name', 'ASC']
         ],
     })
         .then(locationData => {
@@ -37,12 +37,25 @@ const getLocation = (req) => {
             status:1
         },
         order: [
-            ['id', 'ASC']
+            ['display_name', 'ASC']
         ],
     })
         .then(locationData => {
+            // console.log(locationData);
+            let temp = [];
+            let others = {};
+            locationData.forEach((element,index) => {
+                if(element.display_name === 'Others'){
+                    others = element;
+                }else{
+                    temp.push(element)
+                }
+                if(locationData.length === (index+1)){
+                    temp.push(others)
+                    defer.resolve(temp);
 
-            defer.resolve(locationData);
+                }
+            });
         })
         .catch(error => {
             defer.reject({
