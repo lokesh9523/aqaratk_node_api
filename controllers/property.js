@@ -299,7 +299,7 @@ const sendMail = (req) => {
                         searchdata[0].images = JSON.parse(searchdata[0].images);
                     }
                 }
-                clients.findAll({}).then(clientsdata=>{
+                clients.findAll().then(clientsdata=>{
                     if(clients){
                         let mails=[];
                         clientsdata.forEach((mail,index)=>{
@@ -380,6 +380,7 @@ const sendMail = (req) => {
 //     }).then(() => console.log('email has been sent!')).catch(error => {
 //         console.log(error)
 //     });
+return defer.promise;
 }
 const Property = {
     get,
