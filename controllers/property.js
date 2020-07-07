@@ -2,7 +2,8 @@ import {
     sequelize,
     logins,
     property,
-    property_types
+    property_types,
+    clients
 } from './../models';
 import * as jwt from 'jsonwebtoken';
 import q from 'q';
@@ -17,8 +18,21 @@ const get = () => {
         ],
     })
         .then(propertyData => {
+            let temp = [];
+            let others = {};
+            propertyData.forEach((element,index) => {
+                if(element.display_name === 'Others'){
+                    others = element;
+                }else{
+                    temp.push(element)
+                }
+                if(propertyData.length === (index+1)){
+                    temp.push(others)
+                    defer.resolve(temp);
 
-            defer.resolve(propertyData);
+                }
+            });
+            // defer.resolve(propertyData);
         })
         .catch(error => {
             defer.reject({
@@ -131,45 +145,45 @@ const postImage = (req, imagedata) => {
                     },
                     type: sequelize.QueryTypes.SELECT
                 }).then(searchdata => {
-                    const nodemailer = require('nodemailer');
-                    const Email = require('email-templates');
-                    const transporter = nodemailer.createTransport({
-                        host: 'smtp.gmail.com',
-                        port: 465,
-                        secure: true,
-                        auth: {
-                            user: "lokeshbabu.gp21@gmail.com",
-                            pass: "9963049529@"
-                        }
-                    });
-                    const email = new Email({
-                        transport: transporter,
-                        send: true,
-                        preview: false,
-                    });
-                    if(typeof searchdata[0].images === 'string'){
-                        searchdata[0].images = JSON.parse(searchdata[0].images); 
-                        if(typeof searchdata[0].images === 'string'){
-                            searchdata[0].images = JSON.parse(searchdata[0].images);
-                        }
-                    }
-                    email.send({
-                        template: 'property',
-                        message: {
-                            to: 'lokeshbabu.gp95@gmail.com',
-                        },
-                        locals: {
-                            // name: 'Elon',
-                            municipality:searchdata[0].municipality_name,
-                            location:searchdata[0].location_name,
-                            Property:searchdata[0].property_name,
-                            bedbrooms:searchdata[0].no_of_bed_rooms,
-                            furniture:searchdata[0].furniture,
-                            url: 'http://15.206.186.93:3001/'+searchdata[0].images['0']
-                        }
-                    }).then(() => console.log('email has been sent!')).catch(error => {
-                        console.log(error)
-                    });
+                    // const nodemailer = require('nodemailer');
+                    // const Email = require('email-templates');
+                    // const transporter = nodemailer.createTransport({
+                    //     host: 'smtp.gmail.com',
+                    //     port: 465,
+                    //     secure: true,
+                    //     auth: {
+                    //         user: "lokeshbabu.gp21@gmail.com",
+                    //         pass: "9963049529@"
+                    //     }
+                    // });
+                    // const email = new Email({
+                    //     transport: transporter,
+                    //     send: true,
+                    //     preview: false,
+                    // });
+                    // if(typeof searchdata[0].images === 'string'){
+                    //     searchdata[0].images = JSON.parse(searchdata[0].images); 
+                    //     if(typeof searchdata[0].images === 'string'){
+                    //         searchdata[0].images = JSON.parse(searchdata[0].images);
+                    //     }
+                    // }
+                    // email.send({
+                    //     template: 'property',
+                    //     message: {
+                    //         to: 'lokeshbabu.gp95@gmail.com',
+                    //     },
+                    //     locals: {
+                    //         // name: 'Elon',
+                    //         municipality:searchdata[0].municipality_name,
+                    //         location:searchdata[0].location_name,
+                    //         Property:searchdata[0].property_name,
+                    //         bedbrooms:searchdata[0].no_of_bed_rooms,
+                    //         furniture:searchdata[0].furniture,
+                    //         url: 'http://15.206.186.93:3001/'+searchdata[0].images['0']
+                    //     }
+                    // }).then(() => console.log('email has been sent!')).catch(error => {
+                    //     console.log(error)
+                    // });
                     defer.resolve(searchdata);
 
                 });
@@ -251,78 +265,121 @@ const sendMail = (req) => {
     let defer = q.defer();
     let images = {};
     let data = req.params;
-    const nodemailer = require('nodemailer');
-    const Email = require('email-templates');
-    const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-            user: "lokeshbabu.gp21@gmail.com",
-            pass: "9963049529@"// mailtrap.io password
-        }
-    });
-    const email = new Email({
-        transport: transporter,
-        send: true,
-        preview: false,
-    });
-    email.send({
-        template: 'property',
-        message: {
-            to: 'lokeshbabu.gp95@gmail.com',
+    property.findOne({
+        where: {
+            id: data.property_id
         },
-        locals: {
-            name: 'Elon',
-            url: 'http://localhost:3001/images/user_1/Screenshot from 2020-03-21 15-49-34.png'
-        }
-    }).then(() => console.log('email has been sent!')).catch(error => {
-        console.log(error)
-    });
-    // imagedata.forEach((element, index) => {
-    //     images[index] = element.path;
-    // });
-    // property.update({
-    //     images
-    // }, {
-    //     where: {
-    //         id: data.property_id
-    //     }
-    // }).then(imageResponse => {
-    //     property.findOne({
-    //         where: {
-    //             id: data.property_id
-    //         },
-    //     })
-    //         .then(propertyData => {
-    //             sequelize.query("select p.*,l.display_name as location_name,pt.display_name as property_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id where  p.id=:id" , {
-    //                 replacements: {
-    //                     id:data.property_id ? data.property_id : 'NULL'
-    //                 },
-    //                 type: sequelize.QueryTypes.SELECT
-    //             }).then(searchdata => {
-    //                 const nodemailer = require('nodemailer');
-    //                 const Email = require('email-templates');
-    //                 defer.resolve(searchdata);
+    })
+        .then(propertyData => {
+            sequelize.query("select p.*,l.display_name as location_name,pt.display_name as property_name,m.display_name as municipality_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id  left join municipalitis m on p.municipality_id = m.id where  p.id=:id", {
+                replacements: {
+                    id: data.property_id ? data.property_id : 'NULL'
+                },
+                type: sequelize.QueryTypes.SELECT
+            }).then(searchdata => {
+                const nodemailer = require('nodemailer');
+                const Email = require('email-templates');
+                const transporter = nodemailer.createTransport({
+                    host: 'smtp.gmail.com',
+                    port: 465,
+                    secure: true,
+                    auth: {
+                        user: "lokeshbabu.gp21@gmail.com",
+                        pass: "9963049529@"
+                    }
+                });
+                const email = new Email({
+                    transport: transporter,
+                    send: true,
+                    preview: false,
+                });
+                if(typeof searchdata[0].images === 'string'){
+                    searchdata[0].images = JSON.parse(searchdata[0].images); 
+                    if(typeof searchdata[0].images === 'string'){
+                        searchdata[0].images = JSON.parse(searchdata[0].images);
+                    }
+                }
+                clients.findAll({}).then(clientsdata=>{
+                    if(clients){
+                        let mails=[];
+                        clientsdata.forEach((mail,index)=>{
+                            mails.push(mail.email);
+                            console.log(mails,"==============mails")
+                            if(clientsdata.length === (index +1)){
 
-    //             });
-    //         })
-    //         .catch(error => {
-    //             defer.reject({
-    //                 status: 400,
-    //                 message: error.message
-    //             });
-    //             return defer.promise;
-    //         });
+                        defer.resolve({"data":"Sucess"})
+                                email.send({
+                                    template: 'property',
+                                    message: {
+                                        to: mails
+                                    },
+                                    locals: {
+                                        // name: 'Elon',
+                                        municipality:searchdata[0].municipality_name,
+                                        location:searchdata[0].location_name,
+                                        Property:searchdata[0].property_name,
+                                        bedbrooms:searchdata[0].no_of_bed_rooms,
+                                        furniture:searchdata[0].furniture,
+                                        url: 'http://15.206.186.93:3001/'+searchdata[0].images['0']
+                                    }
+                                }).then(() => console.log('email has been sent!')).catch(error => {
+                                    console.log(error)
+                                });
+                                // defer.resolve(clientsdata)
+                            }
+                        });
+                    }else{
+                        defer.resolve({"data":"Sucess"})
+                    }
 
-    // }).catch(error => {
-    //     defer.reject({
-    //         status: 400,
-    //         message: error.message
-    //     });
-    //     return defer.promise;
-    // });
-    return defer.promise;
+                }).catch(error=>{
+                    defer.reject({
+                        status: 400,
+                        message: error.message
+                    });
+                    return defer.promise;
+
+                })
+                // defer.resolve(searchdata);
+
+            });
+        })
+        .catch(error => {
+            defer.reject({
+                status: 400,
+                message: error.message
+            });
+            return defer.promise;
+        });
+//     const nodemailer = require('nodemailer');
+//     const Email = require('email-templates');
+//     const transporter = nodemailer.createTransport({
+//         host: 'smtp.gmail.com',
+//         port: 465,
+//         secure: true,
+//         auth: {
+//             user: "lokeshbabu.gp21@gmail.com",
+//             pass: "9963049529@"// mailtrap.io password
+//         }
+//     });
+//     const email = new Email({
+//         transport: transporter,
+//         send: true,
+//         preview: false,
+//     });
+// clients.findAlll({})
+//     email.send({
+//         template: 'property',
+//         message: {
+//             to: 'lokeshbabu.gp95@gmail.com',
+//         },
+//         locals: {
+//             name: 'Elon',
+//             url: 'http://localhost:3001/images/user_1/Screenshot from 2020-03-21 15-49-34.png'
+//         }
+//     }).then(() => console.log('email has been sent!')).catch(error => {
+//         console.log(error)
+//     });
 }
 const Property = {
     get,
