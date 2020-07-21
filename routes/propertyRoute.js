@@ -85,4 +85,17 @@ router.route('/:property_id').put(function(req,res,next){
 		next(err);
 	})
 })
+router.route('/getAll').get(function(req,res,next){
+    propertyController.getAllProperty(req)
+	.then((response) => {
+        res.status(200);
+		res.send({
+            data: response
+        });
+	})
+	.catch(err => {
+		console.log(err);
+		next(err);
+	})
+})
 module.exports = router;

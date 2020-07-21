@@ -25,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     furniture: {
-      type: DataTypes.ENUM('Semi Furnished','Fully Furnished'),
+      type: DataTypes.ENUM('Semi Furnished','Fully Furnished','Unfurnished'),
       allowNull: false
     },
     price: {
@@ -54,7 +54,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
      type: {
-      type: DataTypes.ENUM('Sell','Rent'),
+      type: DataTypes.ENUM('Sell','Rent','Required'),
       allowNull: false
     },
     description: {

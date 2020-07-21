@@ -382,11 +382,30 @@ const sendMail = (req) => {
 //     });
 return defer.promise;
 }
+const getAllProperty = (req)=>{
+    let defer = q.defer();
+    // sequelize.query("select p.*,m.display_name as municipality_name,l.display_name as location_name,pt.display_name as property_name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id left join municipalitis m on p.municipality_id = m.id where  " + query + "  order by p.id desc ", {
+        sequelize.query("select p.*,m.display_name as municipality_name,l.display_name as location_name,pt.display_name as property_name,lo.role,lo.adjective,lo.email,lo.mobile_number,lo.name from property p left join location l on p.location_id = l.id left join property_types pt on pt.id = p.property_id left join municipalitis m on p.municipality_id = m.id left join logins lo on p.login_id = lo.id ", {
+        replacements: {
+            
+        },
+        type: sequelize.QueryTypes.SELECT
+    }).then(searchdata => {
+        defer.resolve(searchdata);
+    }).catch(error => {
+        defer.reject({
+            status: 400,
+            message: error.message
+        });
+        return defer.promise;
+    })
+    return defer.promise;
+}
 const Property = {
     get,
     post,
     postImage,
-    search, sendMail,put
+    search, sendMail,put,getAllProperty
 };
 
 export {
