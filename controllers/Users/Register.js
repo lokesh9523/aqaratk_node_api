@@ -37,7 +37,7 @@ const post = (data) => {
 			message: "Adjective is missing"
 		});
 		return defer.promise;
-	}	
+	}
 	if (!data.mobile_number) {
 		defer.reject({
 			status: 403,
@@ -58,62 +58,47 @@ const post = (data) => {
 				});
 				return defer.promise;
 			} else {
-				if (data.email) {
+				if (data.user_name) {
 					logins.findOne({
 						where: {
-							email: data.email
+							user_name: data.user_name
 						}
-					}).then(emaildata => {
-						if (emaildata) {
+					}).then(userdata => {
+						if (userdata) {
 							defer.reject({
 								status: 403,
-								message: "Email  already exists"
+								message: "Username  already exists"
 							});
 							return defer.promise;
 						} else {
-							if (data.user_name) {
-								logins.findOne({
-									where: {
-										user_name: data.user_name
-									}
-								}).then(userdata => {
-									if (userdata) {
-										defer.reject({
-											status: 403,
-											message: "Username  already exists"
-										});
-										return defer.promise;
-									} else {
 
-										data.password = md5(data.password);
+							data.password = md5(data.password);
 
-										logins.create(data).then(logindata => {
-											if (logindata) {
-												var fs = require('fs');
-												var path = "images";
-												var dir = path.concat('/user_' + logindata.id);
-												if (!fs.existsSync(dir)) {
-													fs.mkdirSync(dir);
-												}
-									
-												defer.resolve(logindata)
-											}
-										}).catch(error => {
-											defer.reject({
-												status: 400,
-												message: error.message
-											});
-											return defer.promise;
-										});
+							logins.create(data).then(logindata => {
+								if (logindata) {
+									var fs = require('fs');
+									var path = "images";
+									var dir = path.concat('/user_' + logindata.id);
+									if (!fs.existsSync(dir)) {
+										fs.mkdirSync(dir);
 									}
-								})
-							}
+
+									defer.resolve(logindata)
+								}
+							}).catch(error => {
+								defer.reject({
+									status: 400,
+									message: error.message
+								});
+								return defer.promise;
+							});
 						}
 					})
 				}
 			}
 		})
 	}
+
 
 
 
